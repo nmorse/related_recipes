@@ -5,11 +5,11 @@ Requires at least: 3.3
 Tested up to: 3.8
 Stable tag: trunk
 
-A simple 'related articles' plugin that lets you select related articles manually.
+A simple 'related recipes' plugin that lets you select related recipes manually.
 
 == Description ==
 
-A simple 'related articles' plugin that lets you select related articles manually. Supports any post types in WordPress, including custom ones.
+A simple 'related recipes' plugin that lets you select related recipes manually. Supports any post types in WordPress, including custom ones.
 
 Features:
 

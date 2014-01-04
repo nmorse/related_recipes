@@ -1,12 +1,12 @@
 <?php
 /*
-Plugin Name: Related Articles
-Plugin URI: https://github.com/nmorse/related_articles.git
+Plugin Name: Related Recipes
+Plugin URI: https://github.com/nmorse/related_recipes.git
 Description: A simple 'related posts' plugin that lets you select related posts manually.
 Version: 1.4.1
 Author: nmorse
-Author URI: https://github.com/nmorse/related_articles.git
-Text Domain: related articles
+Author URI: https://github.com/nmorse/related_recipes.git
+Text Domain: related recipes
 Domain Path: /lang/
 
 
@@ -31,8 +31,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
 
-if (!class_exists('RelatedArticles')) :
-	class RelatedArticles {
+if (!class_exists('RelatedRecipes')) :
+	class RelatedRecipes {
 
 		// Constructor
 		public function __construct() {
@@ -47,7 +47,7 @@ if (!class_exists('RelatedArticles')) :
 			add_action('admin_menu', array(&$this, 'start'));
 
 			// Adds an option page for the plugin
-			add_action('admin_menu', array(&$this, 'related_articles_options'));
+			add_action('admin_menu', array(&$this, 'related_recipes_options'));
 		}
 
 
@@ -55,7 +55,7 @@ if (!class_exists('RelatedArticles')) :
 		protected function defineConstants() {
 
 			define('RELATED_VERSION', '1.4.1.1');
-			define('RELATED_HOME', 'https://github.com/nmorse/related_articles.git');
+			define('RELATED_HOME', 'https://github.com/nmorse/related_recipes.git');
 			define('RELATED_FILE', plugin_basename(dirname(__FILE__)));
 			define('RELATED_ABSPATH', str_replace('\\', '/', WP_PLUGIN_DIR . '/' . plugin_basename(dirname(__FILE__))));
 			define('RELATED_URLPATH', WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)));
@@ -72,27 +72,27 @@ if (!class_exists('RelatedArticles')) :
 			add_action('admin_print_styles', array(&$this, 'loadCSS'));
 
 			// Adds a meta box for related posts to the edit screen of each post type in WordPress
-			$related_articles_show = get_option('related_articles_show');
-			$related_articles_show = json_decode( $related_articles_show );
-			if ( empty( $related_articles_show ) ) {
-				$related_articles_show = array();
-				$related_articles_show[] = 'any';
+			$related_recipes_show = get_option('related_recipes_show');
+			$related_recipes_show = json_decode( $related_recipes_show );
+			if ( empty( $related_recipes_show ) ) {
+				$related_recipes_show = array();
+				$related_recipes_show[] = 'any';
 			} else {
-				foreach ( $related_articles_show as $post_type ) {
+				foreach ( $related_recipes_show as $post_type ) {
 					if ( $post_type == 'any' ) {
-						$related_articles_show = array();
-						$related_articles_show[] = 'any';
+						$related_recipes_show = array();
+						$related_recipes_show[] = 'any';
 						break;
 					}
 				}
 			}
-			if ( $related_articles_show[0] == 'any' ) {
+			if ( $related_recipes_show[0] == 'any' ) {
 				foreach (get_post_types() as $post_type) :
-					add_meta_box($post_type . '-related-articles-box', __('Related Articles', 'related_articles' ), array(&$this, 'displayMetaBox'), $post_type, 'normal', 'high');
+					add_meta_box($post_type . '-related-recipes-box', __('Related Recipes', 'related_recipes' ), array(&$this, 'displayMetaBox'), $post_type, 'normal', 'high');
 				endforeach;
 			} else {
-				foreach ($related_articles_show as $post_type) :
-					add_meta_box($post_type . '-related-articles-box', __('Related Articles', 'related_articles' ), array(&$this, 'displayMetaBox'), $post_type, 'normal', 'high');
+				foreach ($related_recipes_show as $post_type) :
+					add_meta_box($post_type . '-related-recipes-box', __('Related Recipes', 'related_recipes' ), array(&$this, 'displayMetaBox'), $post_type, 'normal', 'high');
 				endforeach;
 			}
 
@@ -104,14 +104,14 @@ if (!class_exists('RelatedArticles')) :
 
 			wp_enqueue_script('jquery-ui-core');
 			wp_enqueue_script('jquery-ui-sortable');
-			wp_enqueue_script('related-articles-scripts', RELATED_URLPATH .'/scripts.js', false, RELATED_VERSION);
+			wp_enqueue_script('related-recipes-scripts', RELATED_URLPATH .'/scripts.js', false, RELATED_VERSION);
 		}
 
 
 		// Load CSS
 		public function loadCSS() {
 
-			wp_enqueue_style('related-articles-css', RELATED_URLPATH .'/styles.css', false, RELATED_VERSION, 'all');
+			wp_enqueue_style('related-recipes-css', RELATED_URLPATH .'/styles.css', false, RELATED_VERSION, 'all');
 		}
 
 
@@ -122,10 +122,10 @@ if (!class_exists('RelatedArticles')) :
 
 			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 
-			if (!isset($_POST['related-articles']) || empty($_POST['related-articles'])) :
-				delete_post_meta($id, 'related_articles');
+			if (!isset($_POST['related-recipes']) || empty($_POST['related-recipes'])) :
+				delete_post_meta($id, 'related_recipes');
 			else :
-				update_post_meta($id, 'related_articles', $_POST['related-articles']);
+				update_post_meta($id, 'related_recipes', $_POST['related-recipes']);
 			endif;
 		}
 
@@ -136,13 +136,13 @@ if (!class_exists('RelatedArticles')) :
 			global $post;
 
 			$post_id = $post->ID;
-			echo '<div id="related-articles">';
+			echo '<div id="related-recipes">';
 
 			// Get related posts if existing
-			$related_articles = get_post_meta($post_id, 'related_articles', true);
+			$related_recipes = get_post_meta($post_id, 'related_recipes', true);
 
-			if (!empty($related_articles)) :
-				foreach($related_articles as $r) :
+			if (!empty($related_recipes)) :
+				foreach($related_recipes as $r) :
 					$args=array(
 						'name' => $r,
 						'post_type' => 'post',
@@ -151,10 +151,10 @@ if (!class_exists('RelatedArticles')) :
 					);
 					$p = get_posts( $args );
 					echo '
-						<div class="related-articles" id="related-articles-' . $r . '">
-							<input type="hidden" name="related-articles[]" value="' . $r . '">
-							<span class="related-articles-title">' . $r . " " . $p[0]->post_title . '</span>
-							<a href="#">' . __('Delete', 'related_articles' ) . '</a>
+						<div class="related-recipes" id="related-recipes-' . $r . '">
+							<input type="hidden" name="related-recipes[]" value="' . $r . '">
+							<span class="related-recipes-title">' . $r . " " . $p[0]->post_title . '</span>
+							<a href="#">' . __('Delete', 'related_recipes' ) . '</a>
 						</div>';
 				endforeach;
 			endif;
@@ -162,19 +162,19 @@ if (!class_exists('RelatedArticles')) :
 			echo '
 				</div>
 				<p>
-					<select class="related-articles-select" name="related-articles-select">
-						<option value="0">' . __('Select', 'related_articles' ) . '</option>';
+					<select class="related-recipes-select" name="related-recipes-select">
+						<option value="0">' . __('Select', 'related_recipes' ) . '</option>';
 
-			$related_articles_list = get_option('related_list');
-			$related_articles_list = json_decode( $related_articles_list );
-			if ( empty( $related_articles_list ) ) {
-				$related_articles_list = array();
-				$related_articles_list[] = 'any';
+			$related_recipes_list = get_option('related_list');
+			$related_recipes_list = json_decode( $related_recipes_list );
+			if ( empty( $related_recipes_list ) ) {
+				$related_recipes_list = array();
+				$related_recipes_list[] = 'any';
 			} else {
-				foreach ( $related_articles_list as $post_type ) {
+				foreach ( $related_recipes_list as $post_type ) {
 					if ( $post_type == 'any' ) {
-						$related_articles_list = array();
-						$related_articles_list[] = 'any';
+						$related_recipes_list = array();
+						$related_recipes_list[] = 'any';
 						break;
 					}
 				}
@@ -187,7 +187,7 @@ if (!class_exists('RelatedArticles')) :
 				'post__not_in' => array($post_id),
 				'post_status' => 'publish',
 				'posts_per_page' => -1,
-				'post_type' => $related_articles_list,
+				'post_type' => $related_recipes_list,
 				'orderby' => 'title',
 				'order' => 'ASC'
 			);
@@ -202,8 +202,8 @@ if (!class_exists('RelatedArticles')) :
 						</select>
 					</p>
 					<p>
-						<select class="related-articles-select" name="related-articles-select">
-							<option value="0">' . __('Select', 'related_articles' ) . '</option>';
+						<select class="related-recipes-select" name="related-recipes-select">
+							<option value="0">' . __('Select', 'related_recipes' ) . '</option>';
 				}
 				?>
 				<option value="<?php
@@ -220,7 +220,7 @@ if (!class_exists('RelatedArticles')) :
 					</select>
 				</p>
 				<p>' .
-					__('Select related posts from the list. Drag selected ones to change order.', 'related_articles' )
+					__('Select related posts from the list. Drag selected ones to change order.', 'related_recipes' )
 				. '</p>';
 		}
 
@@ -231,11 +231,11 @@ if (!class_exists('RelatedArticles')) :
 			global $wpdb;
 
 			if (!empty($id) && is_numeric($id)) :
-				$related_articles = get_post_meta($id, 'related_articles', true);
+				$related_recipes = get_post_meta($id, 'related_recipes', true);
 
-				if (!empty($related_articles)) :
+				if (!empty($related_recipes)) :
 					$rel = array();
-					foreach ($related_articles as $r) :
+					foreach ($related_recipes as $r) :
 						$args=array(
 							'name' => $r,
 							'post_type' => 'post',
@@ -252,7 +252,7 @@ if (!class_exists('RelatedArticles')) :
 
 					// Otherwise return a formatted list
 					else :
-						$list = '<ul class="related-articles">';
+						$list = '<ul class="related-recipes">';
 						foreach ($rel as $r) :
 							$list .= '<li><a href="' . get_permalink($r->ID) . '">' . $r->post_title . '</a></li>';
 						endforeach;
@@ -264,15 +264,15 @@ if (!class_exists('RelatedArticles')) :
 					return false;
 				endif;
 			else :
-				return __('Invalid post ID specified', 'related_articles' );
+				return __('Invalid post ID specified', 'related_recipes' );
 			endif;
 		}
 
 		// Adds an option page to Settings.
-		function related_articles_options() {
-			add_options_page(__('Related Articles', 'related_articles'), __('Related Articles', 'related_articles'), 'manage_options', 'related.php', array(&$this, 'related_articles_options_page'));
+		function related_recipes_options() {
+			add_options_page(__('Related Recipes', 'related_recipes'), __('Related Recipes', 'related_recipes'), 'manage_options', 'related.php', array(&$this, 'related_recipes_options_page'));
 		}
-		function related_articles_options_page() {
+		function related_recipes_options_page() {
 			// Handle the POST
 			if ( isset( $_POST['form'] ) ) {
 				if ( function_exists('current_user_can') && !current_user_can('manage_options') ) {
@@ -287,7 +287,7 @@ if (!class_exists('RelatedArticles')) :
 						$showkeys[] = str_replace('show_', '', $key);
 					}
 					$showkeys = json_encode($showkeys);
-					update_option( 'related_articles_show', $showkeys );
+					update_option( 'related_recipes_show', $showkeys );
 				} else if ( $_POST['form'] == 'list' ) {
 					$listkeys = array();
 					foreach ($_POST as $key => $value) {
@@ -304,18 +304,18 @@ if (!class_exists('RelatedArticles')) :
 			// Make a form to submit
 
 			echo '<div id="poststuff" class="metabox-holder">
-					<div class="widget related-articles-widget">
-						<h3 class="widget-top">' . __('Post Types to show the Related Articles form on.', 'related_articles') . '</h3>';
+					<div class="widget related-recipes-widget">
+						<h3 class="widget-top">' . __('Post Types to show the Related Recipes form on.', 'related_recipes') . '</h3>';
 
-			$related_articles_show = get_option('related_articles_show');
-			$related_articles_show = json_decode( $related_articles_show );
+			$related_recipes_show = get_option('related_recipes_show');
+			$related_recipes_show = json_decode( $related_recipes_show );
 			$any = '';
-			if ( empty( $related_articles_show ) ) {
-				$related_articles_show = array();
-				$related_articles_show[] = 'any';
+			if ( empty( $related_recipes_show ) ) {
+				$related_recipes_show = array();
+				$related_recipes_show[] = 'any';
 				$any = 'checked="checked';
 			} else {
-				foreach ( $related_articles_show as $key ) {
+				foreach ( $related_recipes_show as $key ) {
 					if ( $key == 'any' ) {
 						$any = 'checked="checked"';
 					}
@@ -324,8 +324,8 @@ if (!class_exists('RelatedArticles')) :
 			?>
 
 			<div class="misc-pub-section">
-			<p><?php _e('If Any is selected, it will show on any Post Type. If none are selected, Any will still apply.', 'related_articles'); ?></p>
-			<form name="related_articles_options_page_show" action="" method="POST">
+			<p><?php _e('If Any is selected, it will show on any Post Type. If none are selected, Any will still apply.', 'related_recipes'); ?></p>
+			<form name="related_recipes_options_page_show" action="" method="POST">
 				<ul>
 				<li><label for="show_any">
 					<input name="show_any" type="checkbox" id="show_any" <?php echo $any; ?>  />
@@ -339,7 +339,7 @@ if (!class_exists('RelatedArticles')) :
 						continue;
 					}
 
-					foreach ( $related_articles_show as $key ) {
+					foreach ( $related_recipes_show as $key ) {
 						if ( $key == $post_type ) {
 							$checked = 'checked="checked"';
 						}
@@ -361,17 +361,17 @@ if (!class_exists('RelatedArticles')) :
 			</div>
 			<?php
 
-			echo '<div class="widget related-articles-widget">
-						<h3 class="widget-top">' . __('Post Types to list on the Related Articles forms.', 'related_articles') . '</h3>';
+			echo '<div class="widget related-recipes-widget">
+						<h3 class="widget-top">' . __('Post Types to list on the Related Recipes forms.', 'related_recipes') . '</h3>';
 			$any = ''; // reset
-			$related_articles_list = get_option('related_articles_list');
-			$related_articles_list = json_decode( $related_articles_list );
-			if ( empty( $related_articles_list ) ) {
-				$related_articles_list = array();
-				$related_articles_list[] = 'any';
+			$related_recipes_list = get_option('related_recipes_list');
+			$related_recipes_list = json_decode( $related_recipes_list );
+			if ( empty( $related_recipes_list ) ) {
+				$related_recipes_list = array();
+				$related_recipes_list[] = 'any';
 				$any = 'checked';
 			} else {
-				foreach ( $related_articles_list as $key ) {
+				foreach ( $related_recipes_list as $key ) {
 					if ( $key == 'any' ) {
 						$any = 'checked="checked"';
 					}
@@ -380,8 +380,8 @@ if (!class_exists('RelatedArticles')) :
 			?>
 
 			<div class="misc-pub-section">
-			<p><?php _e('If Any is selected, it will list any Post Type. If none are selected, it will still list any Post Type.', 'related_articles'); ?></p>
-			<form name="related_articles_options_page_listed" action="" method="POST">
+			<p><?php _e('If Any is selected, it will list any Post Type. If none are selected, it will still list any Post Type.', 'related_recipes'); ?></p>
+			<form name="related_recipes_options_page_listed" action="" method="POST">
 				<ul>
 				<li><label for="list_any">
 					<input name="list_any" type="checkbox" id="list_any" <?php echo $any; ?>  />
@@ -394,7 +394,7 @@ if (!class_exists('RelatedArticles')) :
 						continue;
 					}
 
-					foreach ( $related_articles_list as $key ) {
+					foreach ( $related_recipes_list as $key ) {
 						if ( $key == $post_type ) {
 							$checked = 'checked="checked"';
 						}
@@ -421,23 +421,23 @@ if (!class_exists('RelatedArticles')) :
 endif;
 
 /* Include widget */
-include( 'related-articles-widget.php' );
+include( 'related-recipes-widget.php' );
 
 /*
  * related_init
  * Function called at initialisation.
  * - Loads language files
- * - Make an instance of RelatedArticles()
+ * - Make an instance of RelatedRecipes()
  */
 
-function related_articles_init() {
- 	load_plugin_textdomain('related_articles', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/');
+function related_recipes_init() {
+ 	load_plugin_textdomain('related_recipes', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/');
 
 	// Start the plugin
-	global $related_articles;
-	$related_articles = new RelatedArticles();
+	global $related_recipes;
+	$related_recipes = new RelatedRecipes();
 }
-add_action('plugins_loaded', 'related_articles_init');
+add_action('plugins_loaded', 'related_recipes_init');
 
 
 ?>

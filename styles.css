@@ -1,6 +1,6 @@
 
 /* Metabox */
-.related-articles {
+.related-recipes {
   font-size: 11px;
   margin: 6px 6px 8px;
   padding: 8px;
@@ -12,18 +12,18 @@
      -moz-border-radius: 4px;
           border-radius: 4px;
 }
-.related-articles-title {
+.related-recipes-title {
   padding: 0 30px 0 0;
 }
-.related-articles a {
+.related-recipes a {
   float: right;
 }
 
-.related-articles-select {
+.related-recipes-select {
 	min-width: 500px;
 }
 
 /* Options Page */
-.related-articles-widget {
+.related-recipes-widget {
 	max-width: 700px;
 }
