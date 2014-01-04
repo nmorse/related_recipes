@@ -54,11 +54,11 @@ if (!class_exists('RelatedRecipes')) :
 		// Defines a few static helper values we might need
 		protected function defineConstants() {
 
-			define('RELATED_VERSION', '1.4.1.1');
-			define('RELATED_HOME', 'https://github.com/nmorse/related_recipes.git');
-			define('RELATED_FILE', plugin_basename(dirname(__FILE__)));
-			define('RELATED_ABSPATH', str_replace('\\', '/', WP_PLUGIN_DIR . '/' . plugin_basename(dirname(__FILE__))));
-			define('RELATED_URLPATH', WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)));
+			define('RELATED_RECIPES_VERSION', '1.4.1.1');
+			define('RELATED_RECIPES_HOME', 'https://github.com/nmorse/related_recipes.git');
+			define('RELATED_RECIPES_FILE', plugin_basename(dirname(__FILE__)));
+			define('RELATED_RECIPES_ABSPATH', str_replace('\\', '/', WP_PLUGIN_DIR . '/' . plugin_basename(dirname(__FILE__))));
+			define('RELATED_RECIPES_URLPATH', WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)));
 		}
 
 
@@ -104,14 +104,14 @@ if (!class_exists('RelatedRecipes')) :
 
 			wp_enqueue_script('jquery-ui-core');
 			wp_enqueue_script('jquery-ui-sortable');
-			wp_enqueue_script('related-recipes-scripts', RELATED_URLPATH .'/scripts.js', false, RELATED_VERSION);
+			wp_enqueue_script('related-recipes-scripts', RELATED_RECIPES_URLPATH .'/scripts.js', false, RELATED_RECIPES_VERSION);
 		}
 
 
 		// Load CSS
 		public function loadCSS() {
 
-			wp_enqueue_style('related-recipes-css', RELATED_URLPATH .'/styles.css', false, RELATED_VERSION, 'all');
+			wp_enqueue_style('related-recipes-css', RELATED_RECIPES_URLPATH .'/styles.css', false, RELATED_RECIPES_VERSION, 'all');
 		}
 
 
