@@ -165,7 +165,7 @@ if (!class_exists('RelatedRecipes')) :
 					<select class="related-recipes-select" name="related-recipes-select">
 						<option value="0">' . __('Select', 'related_recipes' ) . '</option>';
 
-			$related_recipes_list = get_option('related_list');
+			$related_recipes_list = get_option('related_recipes_list');
 			$related_recipes_list = json_decode( $related_recipes_list );
 			if ( empty( $related_recipes_list ) ) {
 				$related_recipes_list = array();
@@ -297,7 +297,7 @@ if (!class_exists('RelatedRecipes')) :
 						$listkeys[] = str_replace('list_', '', $key);
 					}
 					$listkeys = json_encode($listkeys);
-					update_option( 'related_list', $listkeys );
+					update_option( 'related_recipes_list', $listkeys );
 				}
 			}
 
