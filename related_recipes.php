@@ -220,7 +220,7 @@ if (!class_exists('RelatedRecipes')) :
 					</select>
 				</p>
 				<p>' .
-					__('Select related posts from the list. Drag selected ones to change order.', 'related_recipes' )
+					__('Select any related recipes from the list. Drag recipes above to change order.', 'related_recipes' )
 				. '</p>';
 		}
 
